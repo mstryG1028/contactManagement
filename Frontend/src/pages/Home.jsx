@@ -6,10 +6,13 @@ const Home = () => {
   const [contacts, setContacts] = useState([]);
   const navigate = useNavigate();
 
-
   const fetchContacts = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/contacts");
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/contacts`,
+        payload
+      );
+
       setContacts(res.data);
     } catch (err) {
       console.error("Failed to fetch contacts:", err.message);
@@ -18,7 +21,8 @@ const Home = () => {
 
   // Delete contact
   const deleteContact = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this contact?")) return;
+    if (!window.confirm("Are you sure you want to delete this contact?"))
+      return;
     try {
       await axios.delete(`http://localhost:5000/contacts/${id}`);
       fetchContacts();
@@ -33,7 +37,6 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-    
       <nav className="bg-white shadow-md px-6 py-4 flex justify-between items-center">
         <h1 className="text-xl font-bold text-blue-600">
           📞 Contact Management
@@ -47,7 +50,6 @@ const Home = () => {
         </button>
       </nav>
 
-
       <div className="max-w-7xl mx-auto p-6">
         {contacts.length === 0 ? (
           <p className="text-center text-gray-500 mt-20">
@@ -60,23 +62,19 @@ const Home = () => {
                 key={c._id}
                 className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition relative"
               >
-
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">
                   {c.name}
                 </h3>
-
 
                 <p className="text-gray-600 text-sm">
                   <span className="font-medium text-gray-700">Email:</span>{" "}
                   {c.email}
                 </p>
 
-
                 <p className="text-gray-600 text-sm mt-1">
                   <span className="font-medium text-gray-700">Phone:</span>{" "}
                   {c.phone}
                 </p>
-
 
                 {c.message && (
                   <p className="text-gray-600 text-sm mt-2">
@@ -84,7 +82,6 @@ const Home = () => {
                     {c.message}
                   </p>
                 )}
-
 
                 <button
                   onClick={() => deleteContact(c._id)}

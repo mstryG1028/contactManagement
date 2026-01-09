@@ -23,10 +23,12 @@ const Create = () => {
     const newErrors = {};
     if (!formData.name.trim()) newErrors.name = "Name is required";
     if (!formData.email.trim()) newErrors.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Enter a valid email";
+    else if (!/\S+@\S+\.\S+/.test(formData.email))
+      newErrors.email = "Enter a valid email";
 
     if (!formData.phone) newErrors.phone = "Phone is required";
-    else if (!/^\d{10}$/.test(formData.phone)) newErrors.phone = "Phone must be 10 digits";
+    else if (!/^\d{10}$/.test(formData.phone))
+      newErrors.phone = "Phone must be 10 digits";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -43,11 +45,18 @@ const Create = () => {
         phone: `${formData.countryCode}${formData.phone}`,
         message: formData.message,
       };
-      const res = await axios.post("http://localhost:5000/contacts", payload);
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/contacts`,
+        payload
+      );
+
       console.log("Saved:", res.data);
       navigate("/");
     } catch (err) {
-      console.error("Failed to save contact:", err.response?.data || err.message);
+      console.error(
+        "Failed to save contact:",
+        err.response?.data || err.message
+      );
       alert("Failed to save contact. Check backend logs.");
     }
   };
@@ -55,7 +64,9 @@ const Create = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-blue-50 px-4">
       <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center mb-6 text-blue-600">Create Contact</h2>
+        <h2 className="text-2xl font-bold text-center mb-6 text-blue-600">
+          Create Contact
+        </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             name="name"
@@ -63,7 +74,9 @@ const Create = () => {
             value={formData.name}
             onChange={handleChange}
             className={`w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 ${
-              errors.name ? "border-red-500 focus:ring-red-400" : "focus:ring-blue-500"
+              errors.name
+                ? "border-red-500 focus:ring-red-400"
+                : "focus:ring-blue-500"
             }`}
           />
           {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
@@ -74,10 +87,14 @@ const Create = () => {
             value={formData.email}
             onChange={handleChange}
             className={`w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 ${
-              errors.email ? "border-red-500 focus:ring-red-400" : "focus:ring-blue-500"
+              errors.email
+                ? "border-red-500 focus:ring-red-400"
+                : "focus:ring-blue-500"
             }`}
           />
-          {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+          {errors.email && (
+            <p className="text-red-500 text-sm">{errors.email}</p>
+          )}
 
           <div className="flex gap-2">
             <select
@@ -98,11 +115,15 @@ const Create = () => {
               onChange={handleChange}
               maxLength={10}
               className={`flex-1 px-4 py-2 border rounded-lg outline-none focus:ring-2 ${
-                errors.phone ? "border-red-500 focus:ring-red-400" : "focus:ring-blue-500"
+                errors.phone
+                  ? "border-red-500 focus:ring-red-400"
+                  : "focus:ring-blue-500"
               }`}
             />
           </div>
-          {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
+          {errors.phone && (
+            <p className="text-red-500 text-sm">{errors.phone}</p>
+          )}
 
           <textarea
             name="message"
