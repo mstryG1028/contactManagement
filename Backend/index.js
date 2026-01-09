@@ -15,16 +15,15 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// MongoDB connection
+
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("Database connected"))
   .catch((err) => console.log("MongoDB connection error:", err));
 
-// API routes
 app.use("/contacts", contactRoute);
 
-// Serve frontend build
+
 const __dirname = path.resolve();
 app.use(express.static(path.join(__dirname, "../Frontend/dist")));
 

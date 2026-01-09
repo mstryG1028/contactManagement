@@ -6,9 +6,25 @@ const Home = () => {
   const [contacts, setContacts] = useState([]);
   const navigate = useNavigate();
 
+
   const fetchContacts = async () => {
-    const res = await axios.get("http://localhost:5000/contacts");
-    setContacts(res.data);
+    try {
+      const res = await axios.get("http://localhost:5000/contacts");
+      setContacts(res.data);
+    } catch (err) {
+      console.error("Failed to fetch contacts:", err.message);
+    }
+  };
+
+  // Delete contact
+  const deleteContact = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this contact?")) return;
+    try {
+      await axios.delete(`http://localhost:5000/contacts/${id}`);
+      fetchContacts();
+    } catch (err) {
+      console.error("Failed to delete contact:", err.message);
+    }
   };
 
   useEffect(() => {
@@ -17,7 +33,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Navbar */}
+    
       <nav className="bg-white shadow-md px-6 py-4 flex justify-between items-center">
         <h1 className="text-xl font-bold text-blue-600">
           📞 Contact Management
@@ -31,7 +47,7 @@ const Home = () => {
         </button>
       </nav>
 
-      {/* Content */}
+
       <div className="max-w-7xl mx-auto p-6">
         {contacts.length === 0 ? (
           <p className="text-center text-gray-500 mt-20">
@@ -42,32 +58,40 @@ const Home = () => {
             {contacts.map((c) => (
               <div
                 key={c._id}
-                className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition"
+                className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition relative"
               >
-                {/* Name */}
+
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">
                   {c.name}
                 </h3>
 
-                {/* Email */}
+
                 <p className="text-gray-600 text-sm">
                   <span className="font-medium text-gray-700">Email:</span>{" "}
                   {c.email}
                 </p>
 
-                {/* Phone */}
+
                 <p className="text-gray-600 text-sm mt-1">
                   <span className="font-medium text-gray-700">Phone:</span>{" "}
                   {c.phone}
                 </p>
 
-                {/* Message */}
+
                 {c.message && (
                   <p className="text-gray-600 text-sm mt-2">
                     <span className="font-medium text-gray-700">Message:</span>{" "}
                     {c.message}
                   </p>
                 )}
+
+
+                <button
+                  onClick={() => deleteContact(c._id)}
+                  className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-600 transition"
+                >
+                  Delete
+                </button>
               </div>
             ))}
           </div>
